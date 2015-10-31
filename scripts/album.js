@@ -28,6 +28,23 @@ var albumMarconi = {
      ]
  };
 
+var albumMcIntosh = {
+     name: 'Brian Album',
+     artist: 'Brian McIntosh',
+     label: 'BBM Productions',
+     year: '1988',
+     albumArtUrl: 'assets/images/album_covers/20.png',
+     songs: [
+         { name: 'Title 1', length: '1:01' },
+         { name: 'Title 2', length: '5:01' },
+         { name: 'Title 3', length: '3:21'},
+         { name: 'Title 4', length: '3:14' },
+         { name: 'Title 5', length: '2:15'}
+     ]
+ };
+
+
+
 var createSongRow = function(songNumber, songName, songLength) {
     var template = 
         '<tr class="album-view-song-item">'
@@ -38,13 +55,15 @@ var createSongRow = function(songNumber, songName, songLength) {
     ;
     return template;
 };
-
-var setCurrentAlbum = function(album) {
+var albumImage = document.getElementsByClassName('album-cover-art')[0];
     var albumTitle = document.getElementsByClassName('album-view-title')[0]
     var albumArtist = document.getElementsByClassName('album-view-artist')[0];
     var albumReleaseInfo = document.getElementsByClassName('album-view-release-info')[0];
-    var albumImage = document.getElementsByClassName('album-cover-art')[0];
+
     var albumSongList = document.getElementsByClassName('album-view-song-list')[0];
+
+var setCurrentAlbum = function(album) {
+
     
     albumTitle.firstChild.nodeValue = album.name;
     albumArtist.firstChild.nodeValue = album.artist;
@@ -58,6 +77,20 @@ var setCurrentAlbum = function(album) {
      }
  };
  
-    window.onload = function() {
-     setCurrentAlbum(albumMarconi);
- };
+
+window.onload = function() {
+    setCurrentAlbum(albumPicasso);
+
+    var albums = [albumPicasso, albumMarconi, albumMcIntosh];
+    var index = 1;
+
+    albumImage.addEventListener("click", function(event) {
+        setCurrentAlbum(albums[index]);
+        index++;
+        if (index == albums.length) {
+        index = 0;
+        }
+});
+    
+};
+
