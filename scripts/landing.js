@@ -1,19 +1,16 @@
 var pointsArray = document.getElementsByClassName('point')
 
-var animatePoints = function(points) {
-        
-    var revealPoints = function(index) {
-        pointsArray[index].style.opacity = 1;
-        pointsArray[index].style.transform = "scaleX(1) translateY(0)";
-        pointsArray[index].style.msTransform = "scaleX(1) translateY(0)";
-        pointsArray[index].style.WebkitTransform = "scaleX(1) translateY(0)";   
-    };
-    
-    for (i=0; i<pointsArray.length; i++) {
-    revealPoints(i);
-    }
-
+var revealPoints = function(point) {
+        point.style.opacity = 1;
+        point.style.transform = "scaleX(1) translateY(0)";
+        point.style.msTransform = "scaleX(1) translateY(0)";
+        point.style.WebkitTransform = "scaleX(1) translateY(0)";   
 };
+    
+var animatePoints = function(points) {       
+    forEach(points, revealPoints);
+};
+
 
 
 
