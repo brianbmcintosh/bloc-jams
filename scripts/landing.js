@@ -1,34 +1,37 @@
-var pointsArray = document.getElementsByClassName('point')
+var animatePoints = function() {
+     
+    var revealPoint = function() {
+         $(this).css({
+             opacity: 1,
+             transform: 'scaleX(1) translateY(0)'
+         });
+     };
 
-var animatePoints = function(points) {
-        
-    var revealPoints = function(index) {
-        pointsArray[index].style.opacity = 1;
-        pointsArray[index].style.transform = "scaleX(1) translateY(0)";
-        pointsArray[index].style.msTransform = "scaleX(1) translateY(0)";
-        pointsArray[index].style.WebkitTransform = "scaleX(1) translateY(0)";   
+
+     $.each($('.point'), revealPoint);
+ };
+
+
+
+$(window).load(function() {
+    if ($(window).height() > 950) {
+        animatePoints();
     };
     
-    for (i=0; i<pointsArray.length; i++) {
-    revealPoints(i);
-    }
-
-};
-
-
-
-window.onload = function() {
-    if (window.innerHeight > 950) {
-        animatePoints(pointsArray);
-    }
+    var scrollDistance = $('.selling-points').offset().top - $(window).height() + 200;
     
-    var sellingPoints = document.getElementsByClassName('selling-points')[0];
-    var scrollDistance = sellingPoints.getBoundingClientRect().top - window.innerHeight + 200;
+
     
-    window.addEventListener('scroll', function(event) {
-        if (document.body.scrollTop >= scrollDistance) {
-            animatePoints(pointsArray);
-        }
+    $(window).scroll(function(event) {
+        if ($(window).scrollTop() >= scrollDistance) {
+        animatePoints();
+    }
     });
+    
+});
 
-}
+
+
+ 
+
+
