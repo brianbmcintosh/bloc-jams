@@ -133,6 +133,8 @@ $(document).ready( function() {
   setCurrentAlbum(albumPicasso);
   $previousButton.click(previousSong);
   $nextButton.click(nextSong);
+  $playPauseButton.click(togglePlayFromPlayerBar);
+    
 });
 
 var updatePlayerBarSong = function() {
@@ -293,14 +295,15 @@ var getSongNumberCell = function(number) {
 var togglePlayFromPlayerBar = function() {
         var $currentlyPlayingSongCell = getSongNumberCell(currentlyPlayingSongNumber);
     if (currentSoundFile.isPaused()) {
-        $currentlyPlayingSongCell.html(playerBarPlayButton);
-        $('.main-controls .play-pause').html(playerBarPlayButton);
+        $currentlyPlayingSongCell.html(pauseButtonTemplate);
+        $(this).html(playerBarPauseButton);
         currentSoundFile.play();
     }
     else {
-        $currentlyPlayingSongCell.html(playerBarPauseButton);
-        $('.main-controls .play-pause').html(playerBarPauseButton);
+        $currentlyPlayingSongCell.html(playButtonTemplate);
+        $(this).html(playerBarPlayButton);
         currentSoundFile.pause();
 }
 };
 
+var $playPauseButton = $('.main-controls .play-pause')
