@@ -121,6 +121,7 @@ var playerBarPauseButton = '<span class="ion-pause"></span>';
 var currentlyPlayingSongNumber = null;
 var currentSongFromAlbum = null;
 var currentSoundFile = null;
+var currentVolume = 80;
 var currentAlbum = null;
 
 var $previousButton = $('.main-controls .previous');
@@ -275,7 +276,14 @@ var setSong = function(songNumber) {
     formats: [ 'mp3' ],
     preload: true
      });
+    
 };
+
+var setVolume = function(volume) {
+    if (currentSoundFile) {
+        currentSoundFile.setVolume(volume);
+    }
+}
 
 var getSongNumberCell = function(number) {
     return $('.song-item-number[data-song-number="' + number + '"]')
