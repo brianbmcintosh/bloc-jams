@@ -40,7 +40,7 @@ var createSongRow = function(songNumber, songName, songLength) {
             $('.main-controls .play-pause').html(playerBarPauseButtonButton)
             currentSoundFile.play();
     }
-        }
+        
         else {
             $(this).html(playButtonTemplate);
             $('.main-controls .play-pause').html(playerBarPlayButton)
@@ -51,6 +51,7 @@ var createSongRow = function(songNumber, songName, songLength) {
 //          currentSongFromAlbum = null;
 
 
+  }
   };
 
   var onHover = function(event) {
@@ -289,4 +290,17 @@ var getSongNumberCell = function(number) {
     return $('.song-item-number[data-song-number="' + number + '"]')
 };
 
+var togglePlayFromPlayerBar = function() {
+        var $currentlyPlayingSongCell = getSongNumberCell(currentlyPlayingSongNumber);
+    if (currentSoundFile.isPaused()) {
+        $currentlyPlayingSongCell.html(playerBarPlayButton);
+        $('.main-controls .play-pause').html(playerBarPlayButton);
+        currentSoundFile.play();
+    }
+    else {
+        $currentlyPlayingSongCell.html(playerBarPauseButton);
+        $('.main-controls .play-pause').html(playerBarPauseButton);
+        currentSoundFile.pause();
+}
+};
 
