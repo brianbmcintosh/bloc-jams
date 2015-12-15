@@ -1,11 +1,10 @@
 
 var createSongRow = function(songNumber, songName, songLength) {
-
    var template =
       '<tr class="album-view-song-item">' +
       '  <td class="song-item-number" data-song-number="' + songNumber + '">' + songNumber + '</td>' +
       '  <td class="song-item-title">' + songName + '</td>' +
-      '  <td class="song-item-duration">' + songLength + '</td>' +
+      '  <td class="song-item-duration">' + filterTimeCode(songLength) + '</td>' +
       '</tr>';
 
   var $row = $(template);
@@ -28,6 +27,10 @@ var createSongRow = function(songNumber, songName, songLength) {
           currentSoundFile.play();        
         $(this).html(pauseButtonTemplate);
 //        currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
+        var $volumeFill = $('.volume .fill');
+        var $volumeThumb = $('.volume .thumb');
+        $volumeFill.width(currentVolume + '%');
+        $volumeThumb.css({left: currentVolume + '%'});
         updatePlayerBarSong();
         updateSeekBarWhileSongPlays();
         
@@ -112,30 +115,38 @@ var setCurrentAlbum = function(album) {
 };
 
  var setupSeekBars = function() {
-     var $seekBars = $('.player-bar .seek-bar');
- 
-     
-//     if ($seekBars.parent.hasClass('.volume')) {}
-         
-         
+     var $seekBars = $('.player-bar .seek-bar');        
 
+         
      $seekBars.click(function(event) {
          var offsetX = event.pageX - $(this).offset().left;
          var barWidth = $(this).width();
 
          var seekBarFillRatio = offsetX / barWidth;
  
-
+     if ($(this).parent().attr('class')== 'seek-control') {
+         seek(seekBarFillRatio * currentSoundFile.getDuration());
+     }  else {
+         setVolume(seekBarFillRatio*100);
+     }
          updateSeekPercentage($(this), seekBarFillRatio);
-     
+     });
      
      $seekBars.find('.thumb').mousedown(function(event) {
-              var $seekBar = $(this).parent();
+        var $seekBar = $(this).parent();
+         
  
      $(document).bind('mousemove.thumb', function(event){
              var offsetX = event.pageX - $seekBar.offset().left;
              var barWidth = $seekBar.width();
              var seekBarFillRatio = offsetX / barWidth;
+         
+            if ($(this).parent().attr('class') == 'seek-control') {
+                seek(seekBarFillRatio*currentSoundFile.getDuration());
+            } else {
+                setVolume(seekBarFillRatio)
+            }
+        
  
              updateSeekPercentage($seekBar, seekBarFillRatio);
          });
@@ -145,18 +156,20 @@ var setCurrentAlbum = function(album) {
              $(document).unbind('mouseup.thumb');
          });
                        });
-     });
- };
+     };
+
 
  var updateSeekBarWhileSongPlays = function() {
      if (currentSoundFile) {
-         // #10
          currentSoundFile.bind('timeupdate', function(event) {
              // #11
+             var currentTime = this.getTime();
+             var songLength = this.getDuration();
              var seekBarFillRatio = this.getTime() / this.getDuration();
              var $seekBar = $('.seek-control .seek-bar');
  
              updateSeekPercentage($seekBar, seekBarFillRatio);
+             setCurrentTimeInPlayerBar(currentTime);
          });
      }
  };
@@ -205,7 +218,8 @@ var updatePlayerBarSong = function() {
     $('.currently-playing .artist-name').text(currentAlbum.artist);
     $('.currently-playing .artist-song-mobile').text(currentSongFromAlbum.name + " - " + currentAlbum.artist);
     $('.main-controls .play-pause').html(playerBarPauseButton);
-    
+    setTotalTimeInPlayerBar((currentSongFromAlbum.length));
+
 }
 
 //var nextSong = function() {
@@ -364,4 +378,27 @@ var getSongNumberCell = function(number) {
     return $('.song-item-number[data-song-number="' + number + '"]')
 };
 
+var setCurrentTimeInPlayerBar  = function(currentTime) {
+    var $currentTime = $('.seek-control .current-time');
+    var convertedTime = filterTimeCode(currentTime);
+    $currentTime.text(convertedTime);
+};
 
+var setTotalTimeInPlayerBar  = function(totalTime) {
+    var $currentTime = $('.seek-control .total-time');
+    var convertedTime = filterTimeCode(totalTime);
+    $currentTime.text(convertedTime);
+};
+
+var filterTimeCode = function(timeInSeconds) {
+    var parsedTime = Number.parseFloat(timeInSeconds);
+    var wholeSeconds = Math.floor(parsedTime);
+    var minutes = Math.floor(wholeSeconds/60);
+    var seconds = wholeSeconds % 60;
+    var output = minutes + ':';
+    if (seconds < 10) {
+        output+= '0'
+    }
+    output += seconds;
+    return output;
+};
